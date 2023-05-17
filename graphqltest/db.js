@@ -1,3 +1,29 @@
+/*import mongoose from "mongoose";
+import pkg from 'graphql-iso-date';
+
+const Schema = mongoose.Schema
+
+const visitor = new Schema({
+    id: Int,
+    time: DateTime
+});
+
+const refrigerator = new Schema({
+    id: Int,
+    start: DateTime,
+    end: DateTime
+});
+
+const outofstock = new Schema({
+    shelf: Int,
+    time: DateTime
+});
+
+export default mongoose.model('Visitor', visitor);
+export default mongoose.model('Refrigerator', refrigerator);
+export default mongoose.model('OutOfStock', outofstock);
+*/
+/*
 const visitor = [
     {
         "id": 1,
@@ -66,4 +92,4 @@ const outofstock = [
     },
 ]
 
-export { visitor, refrigerator, outofstock };
+export { visitor, refrigerator, outofstock };*/
