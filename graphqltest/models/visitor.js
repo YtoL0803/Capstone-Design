@@ -1,14 +1,3 @@
-/*import mongoose from "mongoose";
-
-const Schema = mongoose.Schema
-
-const visitor = new Schema({
-    id: Number,
-    time: String
-});
-
-export default mongoose.model('Visitor', visitor);*/
-
 import mongoose from "mongoose";
 
 const { Schema } = mongoose;
