@@ -1,14 +1,3 @@
-/*import mongoose from "mongoose";
-
-const Schema = mongoose.Schema
-
-const outofstock = new Schema({
-    shelf: Number,
-    time: String
-});
-
-export default mongoose.model('OutOfStock', outofstock);*/
-
 import mongoose from "mongoose";
 
 const { Schema } = mongoose;

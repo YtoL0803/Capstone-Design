@@ -1,15 +1,3 @@
-/*import mongoose from "mongoose";
-
-const Schema = mongoose.Schema
-
-const refrigerator = new Schema({
-    id: Number,
-    start: String,
-    end: String
-});
-
-export default mongoose.model('Refrigerator', refrigerator);*/
-
 import mongoose from "mongoose";
 
 const { Schema } = mongoose;

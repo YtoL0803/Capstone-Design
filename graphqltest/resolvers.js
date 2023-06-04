@@ -1,75 +1,14 @@
-//import { visitor, refrigerator, outofstock } from "./db.js";
-/*import Visitor from "./models/visitor.js";
-import Refrigerator from "./models/refrigerator.js";
-import OutOfStock from "./models/outofstock.js";
-
-
-const resolvers = {
-    Query: {
-        visitors: () => Visitor.find()
-        ,
-        visitors_between: (_, {start, end}) => {
-            return Visitor.find({ time: { $gte: start, $lte: end } });
-        },
-        opens: () => {
-            return Refrigerator.find();
-        },
-        open: (_, {id}) => {
-            return Refrigerator.find(refrigerator => refrigerator.id === id)[0];
-        },
-        opens_between: (_, { start, end }) => {
-            return Refrigerator.filter({ time: { $gte: start, $lte: end } });
-        },
-        outofstocks: () => OutOfStock.find(),
-        outofstock: (_, {shelf}) => {
-            return OutOfStock.find(outofstock => outofstock.shelf === shelf);
-        }
-    },
-    Mutation : {
-        addVisitor: (_, {time}) => {
-            let id = Visitor.length + 1;
-            let visitor = new Visitor({
-                id,
-                time
-            });
-            visitor.save();
-
-            return Visitor.find();
-        },
-        openRefrigerator: (_, {start, end}) => {
-            let id = Refrigerator.length + 1;
-            console.log('id: %d, time: %s', Refrigerator[0].id, Refrigerator[0].start);
-            console.log('id: %d', id);
-
-            let refrigerator = new Refrigerator({
-                id,
-                start,
-                end
-            });
-            refrigerator.save();
-
-            return Refrigerator.find();
-        },
-        addOutOfStock: (_, {shelf, time}) => {
-            let outofstock = new OutOfStock({
-                shelf,
-                time
-            });
-            outofstock.save();
-
-            return OutOfStock.find();
-        }
-    }
-};
-
-export default resolvers;*/
-
+import User from "./models/user.js";
 import Visitor from "./models/visitor.js";
 import Refrigerator from "./models/refrigerator.js";
 import OutOfStock from "./models/outofstock.js";
+import bcrypt from 'bcryptjs';
 
 const resolvers = {
   Query: {
+    getUser: (_, { id }) => {
+      return User.findById(id);
+    },
     visitors: async () => {
       const visitors = await Visitor.find({});
       return visitors;
@@ -105,6 +44,36 @@ const resolvers = {
     },
   },
   Mutation: {
+    registerUser: async (_, { username, email, password }) => {
+      const userCount = await User.countDocuments();
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const newUser = new User({
+        id: userCount + 1,
+        username,
+        email,
+        password: hashedPassword,
+      });
+      await newUser.save();
+      return newUser;
+    },
+    loginUser: async (_, { email, password }) => {
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        throw new Error('Invalid email or password');
+      }
+
+      const validPassword = await bcrypt.compare(password, user.password);
+
+      if (!validPassword) {
+        throw new Error('Invalid email or password');
+      }
+
+      console.log('login success');
+
+      return user;
+    },
     addVisitor: async (_, { time }) => {
         const visitorCount = await Visitor.countDocuments();
 
@@ -115,7 +84,7 @@ const resolvers = {
 
         await visitor.save();
 
-        return visitor;;
+        return visitor;
     },
     openRefrigerator: async (_, { start, end }) => {
         const refrigeratorCount = await Refrigerator.countDocuments();
