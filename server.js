@@ -1,6 +1,7 @@
-import { ApolloServer } from "apollo-server";
-import resolvers from "./graphqltest/resolvers.js";
-import typeDefs from "./graphqltest/typeDefs.js";
+import express from 'express';
+import { ApolloServer } from "apollo-server-express";
+import resolvers from "./src/resolvers.js";
+import typeDefs from "./src/typeDefs.js";
 import mongoose from "mongoose";
 
 mongoose.Promise = global.Promise;
@@ -13,13 +14,21 @@ mongoose.connect(
     }
 );
     
-    
-
 const server = new ApolloServer({
     typeDefs,
     resolvers,
+    cors: true,
 });
 
-server.listen().then(({url}) => {
-    console.log('Server ready at ' + url);
-});
+async function startServer() {
+  await server.start();
+
+  const app = express();
+  server.applyMiddleware({ app });
+
+  app.listen({ port: 4000 }, () => {
+    console.log(`Server ready at http://localhost:4000${server.graphqlPath}`);
+  });
+}
+
+startServer();
